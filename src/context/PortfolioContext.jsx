@@ -1,9 +1,13 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 const PortfolioContext = createContext();
 
 export function PortfolioProvider({ children }) {
-  const [portfolio, setPortfolio] = useState([]);
+  const [portfolio, setPortfolio] = useState(() => {
+  const saved = localStorage.getItem("portfolio");
+
+  return saved ? JSON.parse(saved) : [];
+});
 
   function addAsset(asset) {
     setPortfolio((prev) => [...prev, asset]);
@@ -14,6 +18,12 @@ export function PortfolioProvider({ children }) {
       prev.filter((asset) => asset.id !== id)
     );
   }
+  useEffect(() => {
+  localStorage.setItem(
+    "portfolio",
+    JSON.stringify(portfolio)
+  );
+}, [portfolio]);
 
   return (
     <PortfolioContext.Provider
