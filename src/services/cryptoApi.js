@@ -25,3 +25,16 @@ export async function getTrendingCoins() {
 
   return response.data.coins;
 }
+export async function getCurrentPrices(ids) {
+  const response = await axios.get(
+    `${BASE_URL}/simple/price`,
+    {
+      params: {
+        ids: ids.join(","),
+        vs_currencies: "usd",
+      },
+    }
+  );
+
+  return response.data;
+}

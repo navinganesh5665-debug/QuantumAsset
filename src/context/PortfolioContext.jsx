@@ -1,10 +1,11 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
 const PortfolioContext = createContext();
+const STORAGE_KEY = "quantumasset-portfolio";
 
 export function PortfolioProvider({ children }) {
   const [portfolio, setPortfolio] = useState(() => {
-  const saved = localStorage.getItem("portfolio");
+  const saved = localStorage.getItem(STORAGE_KEY);
 
   return saved ? JSON.parse(saved) : [];
 });
@@ -20,9 +21,9 @@ export function PortfolioProvider({ children }) {
   }
   useEffect(() => {
   localStorage.setItem(
-    "portfolio",
-    JSON.stringify(portfolio)
-  );
+  STORAGE_KEY,
+  JSON.stringify(portfolio)
+);
 }, [portfolio]);
 
   return (

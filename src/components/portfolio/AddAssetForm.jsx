@@ -1,10 +1,29 @@
 import { useState } from "react";
 import { usePortfolio } from "../../context/PortfolioContext";
 
+const coinOptions = [
+  {
+    id: "bitcoin",
+    name: "Bitcoin",
+  },
+  {
+    id: "ethereum",
+    name: "Ethereum",
+  },
+  {
+    id: "solana",
+    name: "Solana",
+  },
+  {
+    id: "ripple",
+    name: "XRP",
+  },
+];
+
 export default function AddAssetForm() {
   const { addAsset } = usePortfolio();
 
-  const [coin, setCoin] = useState("Bitcoin");
+  const [coin, setCoin] = useState("bitcoin");
   const [quantity, setQuantity] = useState("");
   const [buyPrice, setBuyPrice] = useState("");
 
@@ -13,13 +32,19 @@ export default function AddAssetForm() {
 
     if (!quantity || !buyPrice) return;
 
+    const selectedCoin = coinOptions.find(
+      (item) => item.id === coin
+    );
+
     addAsset({
       id: Date.now(),
-      coin,
+      coinId: selectedCoin.id,
+      coin: selectedCoin.name,
       quantity: Number(quantity),
       buyPrice: Number(buyPrice),
     });
 
+    setCoin("bitcoin");
     setQuantity("");
     setBuyPrice("");
   }
@@ -30,19 +55,17 @@ export default function AddAssetForm() {
         Add New Asset
       </h2>
 
-      <form
-        onSubmit={handleSubmit}
-        className="space-y-4"
-      >
+      <form onSubmit={handleSubmit} className="space-y-4">
         <select
           value={coin}
           onChange={(e) => setCoin(e.target.value)}
-          className="w-full rounded-lg bg-slate-800 p-3 text-white"
+          className="w-full rounded-lg bg-slate-800 p-3 text-white outline-none focus:ring-2 focus:ring-cyan-500"
         >
-          <option>Bitcoin</option>
-          <option>Ethereum</option>
-          <option>Solana</option>
-          <option>XRP</option>
+          {coinOptions.map((coin) => (
+            <option key={coin.id} value={coin.id}>
+              {coin.name}
+            </option>
+          ))}
         </select>
 
         <input
@@ -50,7 +73,7 @@ export default function AddAssetForm() {
           placeholder="Quantity"
           value={quantity}
           onChange={(e) => setQuantity(e.target.value)}
-          className="w-full rounded-lg bg-slate-800 p-3 text-white"
+          className="w-full rounded-lg bg-slate-800 p-3 text-white outline-none focus:ring-2 focus:ring-cyan-500"
         />
 
         <input
@@ -58,12 +81,12 @@ export default function AddAssetForm() {
           placeholder="Buy Price"
           value={buyPrice}
           onChange={(e) => setBuyPrice(e.target.value)}
-          className="w-full rounded-lg bg-slate-800 p-3 text-white"
+          className="w-full rounded-lg bg-slate-800 p-3 text-white outline-none focus:ring-2 focus:ring-cyan-500"
         />
 
         <button
           type="submit"
-          className="w-full rounded-lg bg-cyan-500 py-3 font-semibold text-white hover:bg-cyan-600"
+          className="w-full rounded-lg bg-cyan-500 py-3 font-semibold text-white transition hover:bg-cyan-600"
         >
           ➕ Add Asset
         </button>
