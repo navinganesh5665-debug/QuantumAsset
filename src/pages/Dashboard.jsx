@@ -1,16 +1,33 @@
 import MainLayout from "../layouts/MainLayout";
+import StatCard from "../components/dashboard/StatCard";
 
 export default function Dashboard() {
   return (
     <MainLayout>
-      <div className="rounded-2xl bg-slate-800 p-8">
-        <h1 className="text-4xl font-bold text-white">
-          QuantumAsset 🚀
-        </h1>
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
+        <StatCard
+          title="Portfolio Value"
+          value="$124,580"
+          change="+12.4%"
+        />
 
-        <p className="mt-4 text-slate-400">
-          Premium Crypto Portfolio & AI Analytics Dashboard
-        </p>
+        <StatCard
+          title="Today's Profit"
+          value="+$3,240"
+          change="+5.1%"
+        />
+
+        <StatCard
+          title="Assets"
+          value="18"
+          change="+2 Assets"
+        />
+
+        <StatCard
+          title="AI Confidence"
+          value="92%"
+          change="Excellent"
+        />
       </div>
     </MainLayout>
   );
