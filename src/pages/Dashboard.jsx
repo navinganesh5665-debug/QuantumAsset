@@ -7,6 +7,7 @@ import PortfolioChart from "../components/dashboard/PortfolioChart";
 import PerformanceChart from "../components/dashboard/PerformanceChart";
 import Watchlist from "../components/dashboard/Watchlist";
 import TrendingCoins from "../components/dashboard/TrendingCoins";
+import AIInsights from "../components/dashboard/AIInsights";
 
 export default function Dashboard() {
   return (
@@ -38,6 +39,7 @@ export default function Dashboard() {
   <Watchlist />
   <TrendingCoins />
 </div>
+    <AIInsights />
     </MainLayout>
   );
 }
