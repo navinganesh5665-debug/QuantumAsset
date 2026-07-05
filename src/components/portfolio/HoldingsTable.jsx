@@ -1,3 +1,4 @@
+import { Trash2 } from "lucide-react";
 import { usePortfolio } from "../../context/PortfolioContext";
 import useCurrentPrices from "../../hooks/useCurrentPrices";
 
@@ -7,130 +8,136 @@ export default function HoldingsTable() {
 
   if (portfolio.length === 0) {
     return (
-      <div className="mt-6 rounded-2xl bg-slate-900 p-6 text-center text-slate-400">
+      <div className="mt-6 rounded-2xl bg-slate-900 p-8 text-center text-slate-400">
         No assets added yet.
       </div>
     );
   }
 
   return (
-    <div className="mt-6 overflow-x-auto rounded-2xl bg-slate-900 p-6">
-      <h2 className="mb-5 text-xl font-bold text-white">
+    <div className="mt-6 rounded-2xl bg-slate-900 p-6 shadow-lg">
+      <h2 className="mb-6 text-2xl font-bold text-white">
         Portfolio Holdings
       </h2>
 
-      <table className="w-full text-left">
-        <thead>
-          <tr className="border-b border-slate-700 text-slate-400">
-            <th className="pb-3">Coin</th>
-            <th className="pb-3">Quantity</th>
-            <th className="pb-3">Buy Price</th>
-            <th className="pb-3">Current Price</th>
-            <th className="pb-3">Profit / Loss</th>
-            <th className="pb-3">Current Value</th>
-            <th className="pb-3">Action</th>
-          </tr>
-        </thead>
+      <div className="space-y-5">
+        {portfolio.map((asset) => {
+          const currentPrice = prices[asset.coinId]?.usd;
 
-        <tbody>
-          {portfolio.map((asset) => {
-            const currentPrice = prices[asset.coinId]?.usd;
+          const currentValue = currentPrice
+            ? asset.quantity * currentPrice
+            : 0;
 
-            const currentValue = currentPrice
-              ? asset.quantity * currentPrice
-              : null;
+          const investedValue =
+            asset.quantity * asset.buyPrice;
 
-            const investedValue =
-              asset.quantity * asset.buyPrice;
+          const profitLoss =
+            currentValue - investedValue;
 
-            const profitLoss =
-              currentValue !== null
-                ? currentValue - investedValue
-                : null;
+          const profitPercent =
+            currentPrice
+              ? ((currentPrice - asset.buyPrice) /
+                  asset.buyPrice) *
+                100
+              : 0;
 
-            const profitPercent =
-              currentPrice
-                ? ((currentPrice - asset.buyPrice) /
-                    asset.buyPrice) *
-                  100
-                : null;
+          return (
+            <div
+              key={asset.id}
+              className="rounded-xl border border-slate-700 bg-slate-800 p-5 transition hover:border-cyan-400"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-xl font-bold text-white">
+                    {asset.coin}
+                  </h3>
 
-            return (
-              <tr
-                key={asset.id}
-                className="border-b border-slate-800"
-              >
-                <td className="py-4 font-medium text-white">
-                  {asset.coin}
-                </td>
+                  <p className="text-slate-400">
+                    Quantity: {asset.quantity}
+                  </p>
+                </div>
 
-                <td className="text-slate-300">
-                  {asset.quantity}
-                </td>
-
-                <td className="text-slate-300">
-                  $
-                  {asset.buyPrice.toLocaleString()}
-                </td>
-
-                <td className="text-cyan-400">
-                  {currentPrice
-                    ? `$${currentPrice.toLocaleString()}`
-                    : "Loading..."}
-                </td>
-
-                <td
-                  className={`font-semibold ${
-                    profitLoss >= 0
-                      ? "text-green-400"
-                      : "text-red-400"
-                  }`}
+                <button
+                  onClick={() => removeAsset(asset.id)}
+                  className="rounded-lg bg-red-500 p-2 text-white transition hover:bg-red-600"
                 >
-                  {profitLoss !== null ? (
-                    <>
-                      {profitLoss >= 0 ? "+" : "-"}$
-                      {Math.abs(profitLoss).toLocaleString(
-                        undefined,
-                        {
-                          maximumFractionDigits: 2,
-                        }
-                      )}
-                      <br />
-                      <span className="text-xs">
-                        ({profitPercent.toFixed(2)}%)
-                      </span>
-                    </>
-                  ) : (
-                    "Loading..."
-                  )}
-                </td>
+                  <Trash2 size={18} />
+                </button>
+              </div>
 
-                <td className="font-semibold text-yellow-400">
-                  {currentValue
-                    ? `$${currentValue.toLocaleString(
-                        undefined,
-                        {
-                          maximumFractionDigits: 2,
-                        }
-                      )}`
-                    : "Loading..."}
-                </td>
+              <div className="mt-5 grid grid-cols-2 gap-4 lg:grid-cols-4">
+                <div>
+                  <p className="text-sm text-slate-400">
+                    Buy Price
+                  </p>
 
-                <td>
-                  <button
-                    onClick={() =>
-                      removeAsset(asset.id)
-                    }
-                    className="rounded-lg bg-red-500 px-3 py-1 text-white transition hover:bg-red-600"
+                  <h4 className="text-lg font-semibold text-white">
+                    $
+                    {asset.buyPrice.toLocaleString()}
+                  </h4>
+                </div>
+
+                <div>
+                  <p className="text-sm text-slate-400">
+                    Current Price
+                  </p>
+
+                  <h4 className="text-lg font-semibold text-cyan-400">
+                    {currentPrice
+                      ? `$${currentPrice.toLocaleString()}`
+                      : "Loading..."}
+                  </h4>
+                </div>
+
+                <div>
+                  <p className="text-sm text-slate-400">
+                    Current Value
+                  </p>
+
+                  <h4 className="text-lg font-semibold text-yellow-400">
+                    $
+                    {currentValue.toLocaleString(undefined, {
+                      maximumFractionDigits: 2,
+                    })}
+                  </h4>
+                </div>
+
+                <div>
+                  <p className="text-sm text-slate-400">
+                    Profit / Loss
+                  </p>
+
+                  <h4
+                    className={`text-lg font-bold ${
+                      profitLoss >= 0
+                        ? "text-green-400"
+                        : "text-red-400"
+                    }`}
                   >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+                    {profitLoss >= 0 ? "+" : "-"}$
+                    {Math.abs(profitLoss).toLocaleString(
+                      undefined,
+                      {
+                        maximumFractionDigits: 2,
+                      }
+                    )}
+                  </h4>
+
+                  <p
+                    className={`text-sm ${
+                      profitLoss >= 0
+                        ? "text-green-400"
+                        : "text-red-400"
+                    }`}
+                  >
+                    ({profitPercent.toFixed(2)}%)
+                  </p>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
