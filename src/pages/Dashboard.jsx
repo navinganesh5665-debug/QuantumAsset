@@ -2,13 +2,14 @@ import MainLayout from "../layouts/MainLayout";
 import DashboardHeader from "../components/dashboard/DashboardHeader";
 import StatCard from "../components/dashboard/StatCard";
 import MarketOverview from "../components/dashboard/MarketOverview";
-import PortfolioChart from "../components/dashboard/PortfolioChart";
+
 import PerformanceChart from "../components/dashboard/PerformanceChart";
 import Watchlist from "../components/dashboard/Watchlist";
 import TrendingCoins from "../components/dashboard/TrendingCoins";
 import AIInsights from "../components/dashboard/AIInsights";
 import PortfolioAllocationChart from "../components/dashboard/PortfolioAllocationChart";
 import usePortfolioStats from "../hooks/usePortfolioStats";
+import PortfolioInsights from "../components/dashboard/PortfolioInsights";
 
 export default function Dashboard() {
   const stats = usePortfolioStats();
@@ -57,26 +58,24 @@ export default function Dashboard() {
       </div>
 
       {/* Portfolio Chart + Market Overview */}
-      <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <PortfolioChart />
-        <MarketOverview />
-      </div>
+      <div className="mt-8">
+  <MarketOverview />
+</div>
 
       {/* Portfolio Allocation */}
-      <div className="mt-8">
-        <PortfolioAllocationChart />
-      </div>
-
-      {/* Performance Chart */}
-      <div className="mt-8">
-        <PerformanceChart />
-      </div>
-
+      {/* Portfolio Allocation + Performance Chart */}
+<div className="mt-8 grid grid-cols-1 gap-6 xl:grid-cols-2">
+  <PortfolioAllocationChart />
+  <PerformanceChart />
+</div>
       {/* Watchlist + Trending Coins */}
       <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
         <Watchlist />
         <TrendingCoins />
       </div>
+      <div className="mt-8">
+  <PortfolioInsights />
+</div>
 
       {/* AI Insights */}
       <div className="mt-8">
